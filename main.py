@@ -5,7 +5,7 @@ import flet as ft
 
 from user import data
 from conf.settings import *
-from content.pages import WelcomePage, LoginPage, RegisterPage, ContentPage
+from content.pages import WelcomePage, LoginPage, RegisterPage, ContentPage, WarningAlert, CustomAppBar
 from sec.encryption import decrypt_the_content
 
 
@@ -14,7 +14,6 @@ from sec.encryption import decrypt_the_content
 # They are in appropriate user directories to specific OS respectively.
 configjson = data.load_config(USER_CONFIG)
 datajson = data.load_data(USER_DATA)
-
 
 cntr = ft.MainAxisAlignment.CENTER
 
@@ -28,7 +27,7 @@ class MainWindow:
         self.unsaved_changes = False
 
         self.page = page
-        self.page.title = "Password Wallet | Login Screen"
+        self.page.title = "Password Wallet"
         self.page.vertical_alignment = cntr 
         self.page.on_route_change = self.route_change
         self.welcome_check()
@@ -39,28 +38,24 @@ class MainWindow:
         else:
             self.page.go('/login')
 
-    def add_view(self, entrypoint:str, controls:list):
-        self.page.views.append(ft.View(
-            entrypoint,
-            controls=controls,
-            horizontal_alignment=ft.alignment.center,
-            vertical_alignment=ft.MainAxisAlignment.CENTER
-            ))
-
     def route_change(self, route):
         self.page.views.clear()
 
-        if self.page.route = '/welcome':
-            self.add_view('/welcome', [WelcomePage(self.page)])
+        if self.page.route == '/welcome':
+            welcomepage:ft.View = WelcomePage(self)
+            self.page.views.append(welcomepage)
 
         elif self.page.route == '/login':
-            self.add_view('/login',[LoginPage(self.page)])
+            loginpage:ft.View = LoginPage(self)
+            self.page.views.append(loginpage)
         
         elif self.page.route == '/register':
-            self.add_view('/register', [RegisterPage(self.page)])
+            registerpage:ft.View = RegisterPage(self)
+            self.page.views.append(registerpage)
 
         elif self.page.route == '/':
-            self.add_view('/',[ContentPage(self.page)])
+            contentpage:ft.View = ContentPage(self)
+            self.page.views.append(contentpage)
 
         self.page.update()
 
@@ -69,5 +64,9 @@ class MainWindow:
         self.datajson = data.load_data(USER_DATA)
         if self.username and self.userkey:
             self.decrypted_content = decrypt_the_content(self.datajson[self.username]["content"], self.userkey)
+
+    def show_alert(self, text):
+        warn = WarningAlert(self, text=text)
+        self.page.open(warn)
 
 ft.app(MainWindow)
