@@ -30,35 +30,37 @@ class MainWindow:
         self.page.title = "Password Wallet"
         self.page.vertical_alignment = cntr 
         self.page.on_route_change = self.route_change
+
+        self.welcomepage:ft.View = WelcomePage(self)
+        self.loginpage:ft.View = LoginPage(self, )
+        self.registerpage:ft.View = RegisterPage(self)
+
+        self.custom_views = [self.welcomepage, self.loginpage, self.registerpage]
         self.welcome_check()
 
     def welcome_check(self):
         if not configjson["welcome_shown"]:
             self.page.go('/welcome')
+            data.save_config(USER_CONFIG, "welcome_shown", True)
         else:
             self.page.go('/login')
 
     def route_change(self, route):
-        self.page.views.clear()
-
+        self.clear_views()
         if self.page.route == '/welcome':
-            welcomepage:ft.View = WelcomePage(self)
-            self.page.views.append(welcomepage)
-
+            self.page.views.append(self.custom_views[0])
         elif self.page.route == '/login':
-            loginpage:ft.View = LoginPage(self)
-            self.page.views.append(loginpage)
-        
+            self.page.views.append(self.custom_views[1])
         elif self.page.route == '/register':
-            registerpage:ft.View = RegisterPage(self)
-            self.page.views.append(registerpage)
-
+            self.page.views.append(self.custom_views[2])
         elif self.page.route == '/':
             contentpage:ft.View = ContentPage(self)
             self.page.views.append(contentpage)
-
+        print(self.page.views)
         self.page.update()
-
+    
+    def clear_views(self):
+        self.page.views.clear()
 
     def reload_data(self):
         self.datajson = data.load_data(USER_DATA)
@@ -68,5 +70,9 @@ class MainWindow:
     def show_alert(self, text):
         warn = WarningAlert(self, text=text)
         self.page.open(warn)
+
+    def show_snackbar(self, text):
+        snack = ft.SnackBar(ft.Text(text, size=20), show_close_icon=True, bgcolor=ft.Colors.SECONDARY, )
+        self.page.open(snack)
 
 ft.app(MainWindow)
