@@ -1,3 +1,5 @@
 cryptography
 platformdirs
 flet
+pyinstaller
+pillow
