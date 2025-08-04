@@ -3,10 +3,9 @@ import os
 
 APP_NAME = "password_wallet" 
 AUTHOR_NAME = "duzdunya"
-APP_DIR= user_config_dir(APP_NAME, AUTHOR_NAME)
+APP_DIR= user_config_dir(APP_NAME, AUTHOR_NAME, ensure_exists=True)
+
 USR_DIR= os.path.join(APP_DIR, "usr")
-if not os.path.exists(APP_DIR):
-    os.makedirs(APP_DIR, exist_ok=True)
 if not os.path.exists(USR_DIR):
     os.makedirs(USR_DIR, exist_ok=True)
 
