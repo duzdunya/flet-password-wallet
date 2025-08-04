@@ -41,7 +41,7 @@ class CustomAppBar(ft.AppBar):
         actions.append(
                 ft.PopupMenuButton(items=[
                                         ft.PopupMenuItem(text="Print", icon=ft.Icons.INFO),
-                                        ft.PopupMenuItem(text="Quit", icon=ft.Icons.SENSOR_DOOR_OUTLINED, on_click=lambda _: self.master.page.window.destroy()),
+                                        ft.PopupMenuItem(text="Quit", icon=ft.Icons.SENSOR_DOOR_OUTLINED, on_click=lambda _: self.quit_callback()),
                                         ])
                 )
 
@@ -49,6 +49,25 @@ class CustomAppBar(ft.AppBar):
                         bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
                         actions=actions,
                          *args, **kwargs)
+
+    def quit_callback(self):
+        if not self.master.unsaved_changes:
+            alert = ft.AlertDialog(modal=True, title="", content=ft.Text("You are exiting app", size=20), actions=[
+                ft.TextButton("Okay", on_click= lambda _: self.master.page.window.destroy()),
+                ft.TextButton("Cancel",style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE), on_click= lambda _: self.master.page.close(alert))
+                ])
+            self.master.page.open(alert)
+        else:
+            alert = ft.AlertDialog(modal=True,title="Unsaved Changes",content=ft.Text("You have unsaved changes!\nYou can save or exit without saving."), actions_padding=30, actions=[
+                ft.TextButton("Save", icon=ft.Icons.SAVE_SHARP, on_click= lambda _: self.exit_save_callback(alert)),
+                ft.TextButton("Exit without saving", icon=ft.Icons.SENSOR_DOOR_OUTLINED, on_click= lambda _: self.master.page.window.destroy()),
+                ft.TextButton("Cancel",style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE), on_click= lambda _: self.master.page.close(alert))
+                ])
+            self.master.page.open(alert)
+
+    def exit_save_callback(self, alert):
+        self.master.page.close(alert)
+        self.used_in.save_callback()
 
 
 ##############################
@@ -115,6 +134,7 @@ class LoginPage(ft.View):
         self.container = ft.Container(content=self.colon, alignment=ft.alignment.center, bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST, padding=30)
 
         self.v_row = ft.ResponsiveRow([ ft.Column([ self.container ],col={"xs":12, "md":6}) ], alignment=CNTR)
+
         super().__init__(controls=[self.v_row], horizontal_alignment=ft.CrossAxisAlignment.CENTER, vertical_alignment=ft.MainAxisAlignment.CENTER, appbar=self.appbar)
 
     def login_callback(self) -> NoReturn:
@@ -179,7 +199,7 @@ class ContentPage(ft.View):
         self.colon = ft.Column(scroll=ft.ScrollMode.ADAPTIVE, expand=True)
         self.appbar = CustomAppBar(title="Content", master=self.master, used_in=self)
         self.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[
-            ft.Text("new Entry"),
+            ft.Text("New Entry"),
             ft.TextField(label="Note"),
             ft.TextField(label="Key"),
             ft.TextField(label="Value"),
@@ -223,7 +243,11 @@ class ContentPage(ft.View):
                          ),
                      ft.DataCell(
                          ft.IconButton(icon=ft.Icons.PREVIEW, on_click=lambda _, g=i: self.show_callback(g), expand=True)
-                         )]
+                         ),
+                     ft.DataCell(
+                         ft.IconButton(icon=ft.Icons.DELETE, style=ft.ButtonStyle(color=ft.Colors.RED), on_click=lambda _, g=i: self.delete_callback(g), expand=True)
+                         )
+                     ]
             dtrow = ft.DataRow(cells=cells)
             setattr(self, f'row_group{i}', dtrow)
 
@@ -262,8 +286,8 @@ class ContentPage(ft.View):
     def add_callback(self):
         controls = self.bottom_appbar.content.controls
         note_val = controls[1].value
-        key_val = controls[1].value
-        value_val = controls[1].value
+        key_val = controls[2].value
+        value_val = controls[3].value
 
         if len(note_val) == 0:
             self.master.show_snackbar("Please add something to Note Area")
@@ -287,6 +311,10 @@ class ContentPage(ft.View):
         self.master.unsaved_changes = True
         self.master.show_snackbar("Added Successfully")
         self.initialize_content()
+
+# need editing
+    def delete_callback(self, g):
+        pass
 
     def show_callback(self, g:int):
         i = g
