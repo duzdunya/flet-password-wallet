@@ -1,5 +1,4 @@
 from .encryption import get_hashed_password
-import customtkinter as ctk
 
 def login_check(username:str, password:str, datajson, master) -> bool:
     if len(username)==0:
