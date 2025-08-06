@@ -1,10 +1,13 @@
-from typing import NoReturn
+from typing import NoReturn, Union
 from sec.auth import login_check, register_check
 from sec.encryption import get_hashed_password, encrypt_the_content, decrypt_the_content, get_user_key
 from user.data import add_new_user, save_content
 from conf.settings import USER_DATA
+from lang.texts import Local
 from PIL import Image
 import flet as ft
+
+l = Local("en")
 
 CNTR = ft.MainAxisAlignment.CENTER
 CX_CENTER = ft.CrossAxisAlignment.CENTER
@@ -15,55 +18,67 @@ CX_CENTER = ft.CrossAxisAlignment.CENTER
 class WarningAlert(ft.AlertDialog):
     def __init__(self, master, text, title="Alert"):
         self.master = master
-        
-        super().__init__(modal=True, content=ft.Text(text, size=20), actions=[ft.TextButton("Ok", on_click= lambda _: self.master.page.close(self))])
+
+        super().__init__(modal=True, content=ft.Text(text, size=20), actions=[ft.TextButton(l.ok, on_click= lambda _: self.master.page.close(self))])
 
 class CustomAppBar(ft.AppBar):
-    def __init__(self, title, master, used_in=None, *args, **kwargs):
-        self.master = master
-        self.used_in = used_in
+    def __init__(self, title, master: "MainWindow", used_in:Union["View", None]=None, *args, **kwargs):
+        self.master:"MainWindow" = master
+        self.used_in:"View" = used_in
+        self.title = title
 
         dlg = ft.AlertDialog(
                 modal=True,
-                title=ft.Text("Info"),
-                content=ft.Text("To encrypt data in the app, you need to register before you can start storing it.\nThis app does not communicate with the internet, everything is stored locally. Content is encrypted and decrypted using your master password, master password is not stored as plain text.\n\nData located:\n\nOn Linux:\n'~/.config/password_wallet'\n\nOn macOS:\n'/Users/<username>/Library/Application Support/password_wallet'\n\nOn Windows:\n'C:\\Users\\<username>\\AppData\\Local\\duzdunya\\password_wallet'\n\nAuthor: Ali Çine"),
-                actions=[ft.TextButton("Ok",on_click=lambda _: self.master.page.close(dlg))]
+                title=ft.Text(l.info),
+                content=ft.Text(l.info_content),
+                actions=[ft.TextButton(l.ok, on_click=lambda _: self.master.page.close(dlg))]
                 )
 
         actions = []
-        if title == "Login":
-            actions.append(ft.TextButton(text="Info", icon=ft.Icons.INFO, on_click=lambda _: self.master.page.open(dlg), style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0)), expand=True))
+        if title == "Password Wallet | Login":
+            actions.append(ft.TextButton(text=l.info, icon=ft.Icons.INFO, on_click=lambda _: self.master.page.open(dlg), style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0)), expand=True))
 
-        elif title == "Content":
-            actions.append(ft.TextButton(text="Save", icon=ft.Icons.SAVE_SHARP, on_click=lambda _: self.used_in.save_callback()))
-            actions.append(ft.TextButton(text="Reload", icon=ft.Icons.CACHED, on_click=lambda _: self.used_in.reload_callback()))
+        elif title == "Password Wallet | Data":
+            actions.append(ft.TextButton(text=l.save, icon=ft.Icons.SAVE_SHARP, on_click=lambda _: self.used_in.save_callback()))
+            actions.append(ft.TextButton(text=l.reload, icon=ft.Icons.CACHED, on_click=lambda _: self.used_in.reload_callback()))
+            actions.append(ft.TextButton(text=l.print, icon=ft.Icons.INFO, on_click=lambda _: print(self.used_in.get_serialized_content()) ))
+            actions.append(ft.TextButton(text=l.check_equal, icon=ft.Icons.INFO, on_click=lambda _: self.used_in.is_there_change() ))
 
         actions.append(
                 ft.PopupMenuButton(items=[
-                                        ft.PopupMenuItem(text="Print", icon=ft.Icons.INFO),
-                                        ft.PopupMenuItem(text="Quit", icon=ft.Icons.SENSOR_DOOR_OUTLINED, on_click=lambda _: self.quit_callback()),
-                                        ])
+                    ft.PopupMenuItem(text=l.quit ,icon=ft.Icons.SENSOR_DOOR_OUTLINED, on_click=lambda _: self.quit_callback()),
+                    ])
                 )
 
         super().__init__(title=ft.Text(title),
-                        bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
-                        actions=actions,
+                         bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+                         actions=actions,
                          *args, **kwargs)
 
     def quit_callback(self):
-        if not self.master.unsaved_changes:
-            alert = ft.AlertDialog(modal=True, title="", content=ft.Text("You are exiting app", size=20), actions=[
-                ft.TextButton("Okay", on_click= lambda _: self.master.page.window.destroy()),
-                ft.TextButton("Cancel",style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE), on_click= lambda _: self.master.page.close(alert))
+        if self.title == "Password Wallet | Data":
+            if self.used_in.is_there_change():
+                alert = ft.AlertDialog(modal=True,title=l.unsaved, content=ft.Text(l.unsaved_content), actions_padding=30, actions=[
+                ft.TextButton(l.save, icon=ft.Icons.SAVE_SHARP, on_click= lambda _: self.exit_save_callback(alert)),
+                ft.TextButton(l.exit_without_save, icon=ft.Icons.SENSOR_DOOR_OUTLINED, on_click= lambda _: self.master.page.window.destroy()),
+                ft.TextButton(l.cancel,style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE), on_click= lambda _: self.master.page.close(alert))
+             ])
+                self.master.page.open(alert)
+            else:
+                alert = ft.AlertDialog(modal=True, title=l.exit, content=ft.Text(l.exit_sure,size=20), actions=[
+                ft.TextButton(l.ok, on_click= lambda _: self.master.page.window.destroy()),
+                ft.TextButton(l.cancel, style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE), on_click= lambda _: self.master.page.close(alert))
                 ])
-            self.master.page.open(alert)
+                self.master.page.open(alert)
+
         else:
-            alert = ft.AlertDialog(modal=True,title="Unsaved Changes",content=ft.Text("You have unsaved changes!\nYou can save or exit without saving."), actions_padding=30, actions=[
-                ft.TextButton("Save", icon=ft.Icons.SAVE_SHARP, on_click= lambda _: self.exit_save_callback(alert)),
-                ft.TextButton("Exit without saving", icon=ft.Icons.SENSOR_DOOR_OUTLINED, on_click= lambda _: self.master.page.window.destroy()),
-                ft.TextButton("Cancel",style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE), on_click= lambda _: self.master.page.close(alert))
+            alert = ft.AlertDialog(modal=True, title=l.exit, content=ft.Text(l.exit_sure,size=20), actions=[
+                ft.TextButton(l.ok, on_click= lambda _: self.master.page.window.destroy()),
+                ft.TextButton(l.cancel, style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE), on_click= lambda _: self.master.page.close(alert))
                 ])
             self.master.page.open(alert)
+
+
 
     def exit_save_callback(self, alert):
         self.master.page.close(alert)
@@ -77,30 +92,11 @@ class WelcomePage(ft.View):
     def __init__(self, master, *args, **kwargs):
         self.master = master
 
-        mdtext = """
-# Hello!,
-## Welcome to my Application.
-Before you can start using this password wallet app, you need to register with your master password.
-Signup and login, then start adding your data to encrypt it with your master password.
-
-__Dont forget your master password!!! If you forget it, then you cannot reach your data!__
-
-After you logged in, you can add your data with input fields.
-
-- Add 'note' to remember the use area of key and value. 'note' area must be unique.
-- 'key' area is mostly email or phone number, 'value' area is password.
-- All 'name', 'key' and 'values' are encrypted.
-
-
-Have a nice day,
-Ali Çine.
-        """
-
         column = ft.Column([
-                ft.Markdown(mdtext,
-                            selectable=True,
-                            ),
-                ft.ElevatedButton(text="Okay",on_click=lambda _: self.okay_callback())
+            ft.Markdown(l.welcome,
+                        selectable=True,
+                        ),
+            ft.ElevatedButton(text=l.ok, on_click=lambda _: self.okay_callback())
             ], alignment=CNTR, horizontal_alignment=CX_CENTER)
 
         self.container = ft.Container(column, padding=50, bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST, alignment=ft.alignment.center)
@@ -116,10 +112,10 @@ class LoginPage(ft.View):
         self.master = master
 
         self.header = ft.Text("Welcome!", size=20)
-        self.username_entry = ft.TextField(label="Username", width=300)
-        self.password_entry = ft.TextField(label="Password", password=True, can_reveal_password=True,width=300)
-        self.login_button= ft.ElevatedButton(text="Login", on_click=lambda _:self.login_callback() ,style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0)), width=300)
-        self.register_button = ft.ElevatedButton(text="Register", on_click=lambda _:self.register_callback(),style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0)), width=300)
+        self.username_entry = ft.TextField(label=l.username, width=300)
+        self.password_entry = ft.TextField(label=l.password, password=True, can_reveal_password=True,width=300)
+        self.login_button= ft.ElevatedButton(text=l.login, on_click=lambda _:self.login_callback() ,style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0)), width=300)
+        self.register_button = ft.ElevatedButton(text=l.register, on_click=lambda _:self.register_callback(),style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0)), width=300)
 
         self.colon = ft.Column([
             self.header,
@@ -129,7 +125,7 @@ class LoginPage(ft.View):
             self.register_button
             ], alignment=CNTR, horizontal_alignment=CX_CENTER)
 
-        self.appbar = CustomAppBar(title="Login", master=self.master)
+        self.appbar = CustomAppBar(title="Password Wallet | Login", master=self.master)
 
         self.container = ft.Container(content=self.colon, alignment=ft.alignment.center, bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST, padding=30)
 
@@ -148,10 +144,10 @@ class LoginPage(ft.View):
             usercontent = self.master.datajson[username_val]["content"]
             self.master.decrypted_content = decrypt_the_content(usercontent, userkey)
             self.master.page.go("/")
-            self.master.show_snackbar("You are logged in!")
+            self.master.show_snackbar(l.logged_in)
 
     def register_callback(self) -> NoReturn:
-       self.master.page.go("/register")
+        self.master.page.go("/register")
 
 class RegisterPage(ft.View):
     def __init__(self, master, *args, **kwargs):
@@ -159,11 +155,11 @@ class RegisterPage(ft.View):
         self.masterpage = master.page
 
         self.signup = ft.Text("Sign Up", size=20)
-        self.name_entry = ft.TextField(label="Name", width=300)
-        self.username_entry = ft.TextField(label="Username", width=300)
-        self.password_entry = ft.TextField(label="Password", width=300, password=True, can_reveal_password=True)
-        self.password_two_entry = ft.TextField(label="Password (again)", width=300, password=True, can_reveal_password=True)
-        self.submit = ft.ElevatedButton("Submit", style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0)), width=300, on_click= lambda _: self.register_callback())
+        self.name_entry = ft.TextField(label=l.name, width=300)
+        self.username_entry = ft.TextField(label=l.username, width=300)
+        self.password_entry = ft.TextField(label=l.password, width=300, password=True, can_reveal_password=True)
+        self.password_two_entry = ft.TextField(label=l.password_again, width=300, password=True, can_reveal_password=True)
+        self.submit = ft.ElevatedButton(l.submit, style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0)), width=300, on_click= lambda _: self.register_callback())
         self.back = ft.IconButton(on_click=lambda _: self.master.page.go("/login"), icon=ft.Icons.KEYBOARD_RETURN)
 
         self.colon = ft.Column([
@@ -176,7 +172,7 @@ class RegisterPage(ft.View):
             self.back
             ], alignment=CNTR, horizontal_alignment=CX_CENTER)
 
-        self.appbar = CustomAppBar(title="Register", master=self.master)
+        self.appbar = CustomAppBar(title="Password Wallet | Register", master=self.master)
 
         self.container = ft.Container(content=self.colon, alignment=ft.alignment.center, bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST, padding=30, )
 
@@ -190,20 +186,20 @@ class RegisterPage(ft.View):
             add_new_user(username=self.username_entry.value,name=self.name_entry.value, password_hashed=get_hashed_password(psswd), password_raw=psswd)
             self.master.reload_data()
             self.master.page.go("/login")
-            self.master.show_alert("You are registered!")
+            self.master.show_alert(l.registered)
 
 
 class ContentPage(ft.View):
     def __init__(self, master):
         self.master = master
         self.colon = ft.Column(scroll=ft.ScrollMode.ADAPTIVE, expand=True)
-        self.appbar = CustomAppBar(title="Content", master=self.master, used_in=self)
+        self.appbar = CustomAppBar(title="Password Wallet | Data", master=self.master, used_in=self)
         self.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[
-            ft.Text("New Entry"),
-            ft.TextField(label="Note"),
-            ft.TextField(label="Key"),
-            ft.TextField(label="Value"),
-            ft.TextButton("Add",icon=ft.Icons.ADD, on_click=lambda _: self.add_callback())
+            ft.Text(l.new_entry),
+            ft.TextField(label=l.note),
+            ft.TextField(label=l.key),
+            ft.TextField(label=l.value),
+            ft.TextButton(l.add,icon=ft.Icons.ADD, on_click=lambda _: self.add_callback())
             ]))
 
         self.initialize_content()
@@ -214,10 +210,11 @@ class ContentPage(ft.View):
         self.colon.controls = []
 
         cols = [
-                ft.DataColumn(ft.Text("Note", expand=True)),
-                ft.DataColumn(ft.Text("Key", expand=True)),
-                ft.DataColumn(ft.Text("Value", expand=True)),
-                ft.DataColumn(ft.Text("Show", expand=True)),
+                ft.DataColumn(ft.Text(l.note, expand=True)),
+                ft.DataColumn(ft.Text(l.key, expand=True)),
+                ft.DataColumn(ft.Text(l.value, expand=True)),
+                ft.DataColumn(ft.Text(l.show, expand=True)),
+                ft.DataColumn(ft.Text(l.delete, expand=True))
                 ]
         rows = []
         decrypted_content = self.master.decrypted_content
@@ -225,21 +222,21 @@ class ContentPage(ft.View):
             cells = [ 
                      ft.DataCell(
                          ft.Row([
-                         ft.TextField(value=f"{note}",  disabled=True, expand=True),
-                         ft.IconButton(icon=ft.Icons.EDIT,on_click=lambda _, g=i, n=0: self.edit_callback(g,n)),
-                         ])
+                             ft.TextField(value=f"{note}",  disabled=True, expand=True),
+                             ft.IconButton(icon=ft.Icons.EDIT,on_click=lambda _, g=i, n=0: self.edit_callback(g,n)),
+                             ])
                          ),
                      ft.DataCell(
                          ft.Row([
-                         ft.TextField(value=f'{decrypted_content[note]["key"]}', disabled=True, password=True, expand=True),
-                         ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, g=i, n=1: self.edit_callback(g,n)),
-                         ])
+                             ft.TextField(value=f'{decrypted_content[note]["key"]}', disabled=True, password=True, expand=True),
+                             ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, g=i, n=1: self.edit_callback(g,n)),
+                             ])
                          ),
                      ft.DataCell(
                          ft.Row([
-                         ft.TextField(value=f'{decrypted_content[note]["value"]}', disabled=True, password=True, expand=True),
-                         ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, g=i, n=2: self.edit_callback(g,n)),
-                         ])
+                             ft.TextField(value=f'{decrypted_content[note]["value"]}', disabled=True, password=True, expand=True),
+                             ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, g=i, n=2: self.edit_callback(g,n)),
+                             ])
                          ),
                      ft.DataCell(
                          ft.IconButton(icon=ft.Icons.PREVIEW, on_click=lambda _, g=i: self.show_callback(g), expand=True)
@@ -249,39 +246,39 @@ class ContentPage(ft.View):
                          )
                      ]
             dtrow = ft.DataRow(cells=cells)
-            setattr(self, f'row_group{i}', dtrow)
-
-
             rows.append(dtrow)
+
+            setattr(self, f'row_group{i}', dtrow)
             setattr(self, f'cell_{i}0_editing', False)
             setattr(self, f'cell_{i}1_editing', False)
             setattr(self, f'cell_{i}2_editing', False)
 
-        self.dt = ft.DataTable(columns=cols, rows=rows, expand=True)
+        self.dt = ft.DataTable(columns=cols, rows=rows, expand=True, border=ft.border.all(0))
         self.colon.controls.append(ft.Row([self.dt], alignment=ft.MainAxisAlignment.CENTER))
         self.master.page.update()
 
     def save_callback(self):
         master = self.master
-        if master.unsaved_changes:
-            encrypted_content = encrypt_the_content(master.decrypted_content, master.userkey)
+        if self.is_there_change(): 
+            encrypted_content = encrypt_the_content(self.get_serialized_content(), master.userkey)
             try:
                 save_content(USER_DATA, master.username, encrypted_content)
             except Exception as e:
                 raise e
             else:
-                master.unsaved_changes = False
-                self.master.show_snackbar("Saved Successfully.")
+                self.master.show_snackbar(l.saved)
+                self.master.reload_data()
         else:
-            self.master.show_snackbar("You dont have any changes.")
+            self.master.show_snackbar(l.no_changes)
 
     def reload_callback(self):
         master = self.master
-        if master.unsaved_changes:
-            self.master.show_snackbar("You have unsaved changes, save before reloading data.")
+        if self.is_there_change():
+            master.show_snackbar(l.save_before_reload)
         else:
             master.reload_data()
             self.initialize_content()
+            master.show_snackbar(l.reloaded)
 
     def add_callback(self):
         controls = self.bottom_appbar.content.controls
@@ -300,20 +297,56 @@ class ContentPage(ft.View):
             return
         else:
             try:
-                self.master.decrypted_content[note_val]
+                self.get_serialized_content()[note_val]
             except:
                 pass
             else:
                 self.master.show_snackbar("Note Area must be unique")
                 return
 
-        self.master.decrypted_content[note_val] = {"key":key_val, "value":value_val}
-        self.master.unsaved_changes = True
-        self.master.show_snackbar("Added Successfully")
-        self.initialize_content()
+        i = len(self.dt.rows) + 1
+        cells = [ 
+                     ft.DataCell(
+                         ft.Row([
+                             ft.TextField(value=f"{note_val}",  disabled=True, expand=True),
+                             ft.IconButton(icon=ft.Icons.EDIT,on_click=lambda _, g=i, n=0: self.edit_callback(g,n)),
+                             ])
+                         ),
+                     ft.DataCell(
+                         ft.Row([
+                             ft.TextField(value=f'{key_val}', disabled=True, password=True, expand=True),
+                             ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, g=i, n=1: self.edit_callback(g,n)),
+                             ])
+                         ),
+                     ft.DataCell(
+                         ft.Row([
+                             ft.TextField(value=f'{value_val}', disabled=True, password=True, expand=True),
+                             ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, g=i, n=2: self.edit_callback(g,n)),
+                             ])
+                         ),
+                     ft.DataCell(
+                         ft.IconButton(icon=ft.Icons.PREVIEW, on_click=lambda _, g=i: self.show_callback(g), expand=True)
+                         ),
+                     ft.DataCell(
+                         ft.IconButton(icon=ft.Icons.DELETE, style=ft.ButtonStyle(color=ft.Colors.RED), on_click=lambda _, g=i: self.delete_callback(g), expand=True)
+                         )
+                     ]
+        dtrow = ft.DataRow(cells=cells)
+        setattr(self, f'row_group{i}', dtrow)
+        setattr(self, f'cell_{i}0_editing', False)
+        setattr(self, f'cell_{i}1_editing', False)
+        setattr(self, f'cell_{i}2_editing', False)
+        #self.master.decrypted_content[note_val] = {"key":key_val, "value":value_val}
+        self.dt.rows.append(dtrow)
+        self.master.show_snackbar(l.added)
 
-# need editing
-    def delete_callback(self, g):
+        controls[1].value = ""
+        controls[2].value = ""
+        controls[3].value = ""
+        self.master.page.update()
+
+    # needs editing
+    def delete_callback(self, g:int):
         pass
 
     def show_callback(self, g:int):
@@ -327,7 +360,8 @@ class ContentPage(ft.View):
         value_control.password = not value_control.password
 
         self.master.page.update()
-
+    
+    # done
     def edit_callback(self, g:int, n:int):
         i = g
         row_group = getattr(self, f'row_group{i}')
@@ -357,7 +391,6 @@ class ContentPage(ft.View):
 
     def get_serialized_content(self) -> dict:
         serialized = {}
-        values = ["note","key","value"]
         for datarow in self.dt.rows:
             # note, key and value cells
             note_value = datarow.cells[0].content.controls[0].value 
@@ -365,5 +398,11 @@ class ContentPage(ft.View):
             value_value = datarow.cells[2].content.controls[0].value
             serialized[note_value]= {"key":key_value, "value":value_value}
 
-        print(serialized)
+        return serialized
 
+    # done
+    def is_there_change(self) -> bool:
+        decrypted: dict = self.master.decrypted_content
+        serialized: dict = self.get_serialized_content()
+        # if hash of twos are not equal, there is a change
+        return decrypted != serialized
