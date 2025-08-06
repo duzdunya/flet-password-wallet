@@ -24,7 +24,6 @@ class MainWindow:
         self.username = None
         self.userkey = None
         self.decrypted_content:dict = None
-        self.unsaved_changes = False
 
         self.page = page
         self.page.title = "Password Wallet"
