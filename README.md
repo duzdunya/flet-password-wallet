@@ -1,6 +1,6 @@
 # About
 <img width="700" height="109" alt="password wallet text last" src="https://github.com/user-attachments/assets/28f025de-0cce-426f-a503-8cdd65a6077d" />
-<br> <br>
+
 This application serves to store your passwords, in a secure, simple way, the data is saved locally on your computer. Using the different users you have registered, the master password is entered into the application. 
 
 **Store your passwords, locally, secure, in a simple way. Remember once, the master password.**
