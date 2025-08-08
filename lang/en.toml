@@ -1,0 +1,64 @@
+language = "en"
+
+welcome = """
+# Hello!,
+## Welcome to my Application.
+Before you can start using this password wallet app, you need to register with your master password.
+Signup and login, then start adding your data to encrypt it with your master password.
+
+__Dont forget your master password!!! If you forget it, then you cannot reach your data!__
+
+After you logged in, you can add your data with input fields.
+
+- Add 'note' to remember the use area of key and value. 'note' area must be unique.
+- 'key' area is mostly email or phone number, 'value' area is password.
+- All 'name', 'key' and 'values' are encrypted.
+
+
+Have a nice day,
+     Ali Çine.
+     """
+
+ok = "Ok"
+cancel = "Cancel"
+info = "Info"
+print = "Print"
+quit = "Quit"
+exit = "Exit"
+save = "Save"
+reload = "Reload"
+
+name = "Name"
+username = "Username"
+password = "Password"
+password_again = "Password (again)"
+login = "Login"
+register = "Register"
+submit = "Submit"
+
+new_entry = "New Entry"
+note = "Note"
+key = "Key"
+value = "Value"
+show = "Show"
+delete = "Delete"
+add = "Add"
+
+info_content = "To encrypt data in the app, you need to register before you can start storing it.\nThis app does not communicate with the internet, everything is stored locally. Content is encrypted and decrypted using your master password, master password is not stored as plain text.\n\nData located:\n\nOn Linux:\n'~/.config/password_wallet'\n\nOn macOS:\n'/Users/<username>/Library/Application Support/password_wallet'\n\nOn Windows:\n'C:\\Users\\<username>\\AppData\\Local\\duzdunya\\password_wallet'\n\nAuthor: Ali Çine"
+
+save_before_reload = "You have unsaved changes, save before reloading data."
+
+
+exit_sure = "You are exiting the app, are you sure?"
+unsaved = "Unsaved Changes"
+unsaved_content = "You have unsaved changes!\nYou can save or exit without saving."
+no_changes  = "You dont have any changes"
+exit_without_save = "Exit without saving"
+check_equal= "is equal?"
+
+added = "Added successfully!"
+saved = "Saved successfully!"
+reloaded = "Reloaded"
+logged_in = "You are logged in!"
+registered = "You have registered!"
+
