@@ -7,6 +7,7 @@ from sec import encryption
 default_config = {"welcome_shown":False, "bgmode":"Dark"}
 default_data = {}
 
+
 # Edit the config file with given key and values.
 def save_config(path, key, value):
     if os.path.exists(path):
