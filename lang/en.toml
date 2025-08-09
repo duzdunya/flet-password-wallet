@@ -19,15 +19,17 @@ Have a nice day,
      Ali Çine.
      """
 
+# general
 ok = "Ok"
 cancel = "Cancel"
 info = "Info"
 print = "Print"
 quit = "Quit"
 exit = "Exit"
-save = "Save"
-reload = "Reload"
+exit_sure = "You are exiting the app, are you sure?"
+check_equal= "is equal?"
 
+# login and register page
 name = "Name"
 username = "Username"
 password = "Password"
@@ -35,7 +37,10 @@ password_again = "Password (again)"
 login = "Login"
 register = "Register"
 submit = "Submit"
+logged_in = "You are logged in!"
+registered = "You have registered!"
 
+# data page
 new_entry = "New Entry"
 note = "Note"
 key = "Key"
@@ -43,22 +48,16 @@ value = "Value"
 show = "Show"
 delete = "Delete"
 add = "Add"
-
+added = "Added successfully!"
+save = "Save"
+saved = "Saved successfully!"
+reload = "Reload"
+reloaded = "Reloaded"
 info_content = "To encrypt data in the app, you need to register before you can start storing it.\nThis app does not communicate with the internet, everything is stored locally. Content is encrypted and decrypted using your master password, master password is not stored as plain text.\n\nData located:\n\nOn Linux:\n'~/.config/password_wallet'\n\nOn macOS:\n'/Users/<username>/Library/Application Support/password_wallet'\n\nOn Windows:\n'C:\\Users\\<username>\\AppData\\Local\\duzdunya\\password_wallet'\n\nAuthor: Ali Çine"
-
 save_before_reload = "You have unsaved changes, save before reloading data."
-
-
-exit_sure = "You are exiting the app, are you sure?"
 unsaved = "Unsaved Changes"
 unsaved_content = "You have unsaved changes!\nYou can save or exit without saving."
 no_changes  = "You dont have any changes"
 exit_without_save = "Exit without saving"
-check_equal= "is equal?"
 
-added = "Added successfully!"
-saved = "Saved successfully!"
-reloaded = "Reloaded"
-logged_in = "You are logged in!"
-registered = "You have registered!"
 
