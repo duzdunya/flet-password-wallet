@@ -34,11 +34,12 @@ class MainWindow:
         self.page.on_route_change = self.route_change
 
         #multilanguage
-        self.change_language("en")
+        self.current_language = configjson["language"]
+        self.change_language(self.current_language, init=True)
 
         #init pages
         self.welcomepage:ft.View = WelcomePage(self)
-        self.loginpage:ft.View = LoginPage(self, )
+        self.loginpage:ft.View = LoginPage(self)
         self.registerpage:ft.View = RegisterPage(self)
 
         self.custom_views = [self.welcomepage, self.loginpage, self.registerpage]
@@ -49,16 +50,20 @@ class MainWindow:
     def __str__(self):
         return "mainwindow"
 
-    def change_language(self, language:str):
+    def change_language(self, language:str, init:bool=False):
         langpath = f"lang/{language}.toml"
-        if os.path.exists(langpath):
+        if language == self.current_language and not init:
+            return
+        elif os.path.exists(langpath):
             try:
                 with open(langpath, "rb") as f:
-                    data = tomllib.load(f)
+                    lang_data = tomllib.load(f)
             except Exception as e:
                 raise e
             else:
-                self.l = Local(data)
+                data.save_config(USER_CONFIG, "language", language)
+                self.current_language = language
+                self.l = Local(lang_data)
                 self.page.update()
                 print(f"Language {language} initialized!")
         else:

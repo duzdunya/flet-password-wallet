@@ -4,7 +4,7 @@ from conf.settings import *
 from sec import encryption
 
 # Config file contains only key and values
-default_config = {"welcome_shown":False, "bgmode":"Dark"}
+default_config = {"welcome_shown":False, "bgmode":"Dark", "language":"en"}
 default_data = {}
 
 

@@ -1,0 +1,81 @@
+language = "tr"
+
+welcome = """
+# Merhaba!,
+## Uygulama hoşgeldin.
+Bu uygulamayı kullanmaya başlamadan önce, sana indirdiğin için teşekkür ederim, amatör olarak uygulama geliştiriyorum, bu işi profesyonel olarak devam ettirmek istiyorum. Bana destek olmak için Github'dan yıldız ver.
+
+## Nasıl Kullanılır?
+İlk önce ana parolan ile kayıt ol.
+Daha sonra ana parolan ile giriş yaptıktan sonra uygulama bu parolayla giriş yaptığın verileri şifreler.
+
+__Ana parolanı sakın unutma!!! Eğer unutursan, şifrelenmiş verilerine erişemezsin!__
+
+Giriş yaptıktan sonra, veri girişi yapmaya başlayabilirsin.
+- 'Not' ekleyerek, verinin kullanım alanını not et, bu alan benzersiz olmalı.
+- 'Anahtar' alanı çoğunlukla email veya telefon numarasıdır.
+- 'Değer' alanı çoğunlukla şifredir.
+- Bütün not, anahtar ve değer alanları lokal olarak şifrelenir, anahtar alanını değer'den ayıran şey, ismidir :d İkisi de aynı amaca hizmet eder, isterseniz Anahtar yerine şifre de yazabilirsiniz.
+
+
+İyi günler,
+     Ali ÇİNE yazdı.
+     """
+
+# general
+ok = "Tm"
+cancel = "İptal"
+info = "Bilgi"
+print = "Yazdır"
+quit = "Çık"
+exit = "Terk et"
+exit_sure = "Uygulumayı terk ediyorsun, emin misin?"
+check_equal= "eşit mi?"
+
+# login and register page
+name = "İsim"
+username = "Kullanıcı Adı"
+password = "Şifre"
+password_again = "Şifre (yine)"
+login = "Giriş"
+register = "Kayıt"
+submit = "İbraz et"
+logged_in = "Başarıyla giriş yaptın!"
+registered = "Başarıyla kaydoldun!"
+
+# data page
+new_entry = "Yeni Kayıt"
+note = "Not"
+key = "Anahtar"
+value = "Değer"
+show = "Göster"
+delete = "Sil"
+add = "Ekle"
+added = "Başarıyla eklendi!"
+save = "Kaydet"
+saved = "Başarıyla kaydedildi!"
+reload = "Yenile"
+reloaded = "Yenilendi"
+info_content = """
+Uygulamayı kullanmaya başlamak için kayıt olman lazım, çünkü veriler kayıt olduğun şifre ile şifrelenir.\n
+Bu uygulama internet ile iletişim kurmaz (eski güzel günlerdeki gibi), her şey lokal kaydedilir. Veriler girdiğin ana parola ile şifrelenir ve çözülür, ana parolan da şifrelenir.
+\n\n
+Veriler,
+\n\n
+Linux'ta: '~/.config/password_wallet'
+\n\n
+MacOS'de: '/Users/<isim>/Library/Application Support/password_wallet'
+\n\n
+Windows'ta: 'C:\\Users\\<isim>\\AppData\\Local\\duzdunya\\password_wallet'
+\n\n
+depolanır.
+
+Yapan: Ali ÇİNE
+"""
+save_before_reload = "Kaydedilmemiş değişiklikler var, yenilemeden önce kaydet."
+unsaved = "Kaydedilmemiş Değişiklikler"
+unsaved_content = "Kaydedilmemiş değişiklikler var!\nKaydet ya da kaydetmeden terk et."
+no_changes  = "Herhangi bir değişiklik yok"
+exit_without_save = "Kaydetmeden terk et."
+
+
