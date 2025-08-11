@@ -13,10 +13,9 @@ class LoginPage(ft.View):
     def __init__(self, master: "MainWindow", *args, **kwargs):
         self.master = master
         self.l = self.master.l
-
-        self.header = ft.Text("Welcome!", size=20)
-        self.username_entry = ft.TextField(label=self.l.username, width=300)
-        self.password_entry = ft.TextField(label=self.l.password, password=True, can_reveal_password=True,width=300)
+        self.header = ft.Text(self.l.welcome, size=20)
+        self.username_entry = ft.TextField(label=self.l.username, width=300 )
+        self.password_entry = ft.TextField(label=self.l.password, password=True, can_reveal_password=True, width=300)
         self.login_button= ft.ElevatedButton(text=self.l.login, on_click=lambda _:self.login_callback(), style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0)), width=300)
         self.register_button = ft.ElevatedButton(text=self.l.register, on_click=lambda _:self.register_callback(),style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0)), width=300)
 

@@ -3,7 +3,8 @@ from .alertd import WarningAlert
 from .appbar import CustomAppBar
 from .abbr import *
 from sec.auth import register_check
-
+from user.data import add_new_user  
+from sec.encryption import get_hashed_password
 
 class RegisterPage(ft.View):
     def __init__(self, master: "MainWindow", *args, **kwargs):

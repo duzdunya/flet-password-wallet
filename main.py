@@ -27,6 +27,9 @@ class MainWindow:
         self.userkey = None
         self.decrypted_content:dict = None
 
+        # self.l is setted in change_langauge
+        self.l = None
+
         #flet
         self.page = page
         self.page.title = "Password Wallet"
@@ -61,11 +64,12 @@ class MainWindow:
             except Exception as e:
                 raise e
             else:
-                data.save_config(USER_CONFIG, "language", language)
+                if not init:
+                    data.save_config(USER_CONFIG, "language", language)
+                    self.show_snackbar(f"Language {language} selected, please restart app to apply it.")
                 self.current_language = language
                 self.l = Local(lang_data)
                 self.page.update()
-                print(f"Language {language} initialized!")
         else:
             self.change_language("en")
             self.show_snackbar(f"There is no language file called {language}. Default setted to english.")

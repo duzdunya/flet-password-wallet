@@ -1,6 +1,7 @@
 language = "en"
 
-welcome = """
+welcome = "Welcome!"
+welcome_content = """
 # Hello!,
 ## Welcome to my Application.
 Before you can start using this password wallet app, you need to register with your master password.
@@ -39,6 +40,21 @@ register = "Register"
 submit = "Submit"
 logged_in = "You are logged in!"
 registered = "You have registered!"
+
+# auth
+give_name = "Please give a name"
+give_username = "Please give an username"
+give_password = "Please give a password"
+give_password_again = "Please give a password (again)"
+username_match = "Username doesn't match"
+password_match = "Password doesn't match"
+length_name_greater = 'The length of the name must not be greater than 100.'
+length_username = 'The length of the username must not be less than 5.'
+length_username_greater = 'The length of the username must not be greater than 100.'
+length_password = "The length of the passord must not be less than 5."
+length_password_greater = 'The length of the password_one must not be greater than 50.'
+passwords_not_same = "Passwords are not the same."
+such_user = 'There is already such a user.'
 
 # data page
 new_entry = "New Entry"

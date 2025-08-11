@@ -1,6 +1,7 @@
 language = "tr"
 
-welcome = """
+welcome = "Hoşgedin!"
+welcome_content = """
 # Merhaba!,
 ## Uygulama hoşgeldin.
 Bu uygulamayı kullanmaya başlamadan önce, sana indirdiğin için teşekkür ederim, amatör olarak uygulama geliştiriyorum, bu işi profesyonel olarak devam ettirmek istiyorum. Bana destek olmak için Github'dan yıldız ver.
@@ -42,6 +43,22 @@ register = "Kayıt"
 submit = "İbraz et"
 logged_in = "Başarıyla giriş yaptın!"
 registered = "Başarıyla kaydoldun!"
+
+# auth
+give_name = "Bir isim gir"
+give_username = "Bir kullanıcı adı gir"
+give_password = "Şifre yaz"
+give_password_again = "Şifreyi tekrar yaz"
+username_match = "İsim uyuşmuyor"
+password_match = "Şifre uyuşmuyor"
+length_name_greater = "İsim karakter sayısı 100'den fazla olamaz"
+length_username = "Kullanıcı adı karakter sayısı 5'ten az olamaz"
+length_username_greater = "Kullanıcı adı karakter sayısı 100'den fazla olamaz."
+length_password = "Şifrenin karakter sayısı 5'ten az olamaz."
+length_password_greater = "Şifrenin karakter sayısı 50'den fazla olamaz."
+passwords_not_same = "Şifreler uyuşmuyor."
+such_user = 'Kullanıcı adı alınmış.'
+
 
 # data page
 new_entry = "Yeni Kayıt"

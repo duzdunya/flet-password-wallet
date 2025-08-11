@@ -1,6 +1,4 @@
 import flet as ft
-from typing import NoReturn
-
 
 from .alertd import WarningAlert
 from .appbar import CustomAppBar
