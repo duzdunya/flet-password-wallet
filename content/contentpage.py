@@ -35,6 +35,7 @@ class ContentPage(ft.View):
         return "data"
 
     def initialize_content(self):
+        dcryptd = self.master.decrypted_content
         self.colon.controls = []
 
         cols = [
@@ -44,9 +45,10 @@ class ContentPage(ft.View):
                 ft.DataColumn(ft.Text(self.l.show, expand=True)),
                 ft.DataColumn(ft.Text(self.l.delete, expand=True))
                 ]
+
         rows = []
-        decrypted_content = self.master.decrypted_content
-        for i, note in enumerate(decrypted_content):
+
+        for i, note in enumerate(dcryptd):
             cells = [ 
                      ft.DataCell(
                          ft.Row([
@@ -56,13 +58,13 @@ class ContentPage(ft.View):
                          ),
                      ft.DataCell(
                          ft.Row([
-                             ft.TextField(value=f'{decrypted_content[note]["key"]}', disabled=True, password=True, expand=True),
+                             ft.TextField(value=f'{dcryptd[note]["key"]}', disabled=True, password=True, expand=True),
                              ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, g=i, n=1: self.edit_callback(g,n)),
                              ])
                          ),
                      ft.DataCell(
                          ft.Row([
-                             ft.TextField(value=f'{decrypted_content[note]["value"]}', disabled=True, password=True, expand=True),
+                             ft.TextField(value=f'{dcryptd[note]["value"]}', disabled=True, password=True, expand=True),
                              ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, g=i, n=2: self.edit_callback(g,n)),
                              ])
                          ),
@@ -70,13 +72,14 @@ class ContentPage(ft.View):
                          ft.IconButton(icon=ft.Icons.PREVIEW, on_click=lambda _, g=i: self.show_callback(g), expand=True)
                          ),
                      ft.DataCell(
-                         ft.IconButton(icon=ft.Icons.DELETE, style=ft.ButtonStyle(color=ft.Colors.RED), on_click=lambda _, g=i: self.delete_callback(g), expand=True)
+                         ft.IconButton(icon=ft.Icons.DELETE, icon_color=ft.Colors.WHITE, bgcolor=ft.Colors.RED, on_click=lambda _, g=i: self.delete_callback(g), expand=True)
                          )
                      ]
             dtrow = ft.DataRow(cells=cells)
             rows.append(dtrow)
 
             setattr(self, f'row_group{i}', dtrow)
+            print("setted ", f"row_group{i}")
             setattr(self, f'cell_{i}0_editing', False)
             setattr(self, f'cell_{i}1_editing', False)
             setattr(self, f'cell_{i}2_editing', False)
@@ -132,7 +135,7 @@ class ContentPage(ft.View):
                 self.master.show_snackbar("Note Area must be unique")
                 return
 
-        i = len(self.dt.rows) + 1
+        i = len(self.dt.rows)
         cells = [ 
                      ft.DataCell(
                          ft.Row([
@@ -156,7 +159,7 @@ class ContentPage(ft.View):
                          ft.IconButton(icon=ft.Icons.PREVIEW, on_click=lambda _, g=i: self.show_callback(g), expand=True)
                          ),
                      ft.DataCell(
-                         ft.IconButton(icon=ft.Icons.DELETE, style=ft.ButtonStyle(color=ft.Colors.RED), on_click=lambda _, g=i: self.delete_callback(g), expand=True)
+                         ft.IconButton(icon=ft.Icons.DELETE, icon_color=ft.Colors.WHITE, bgcolor=ft.Colors.RED, on_click=lambda _, g=i: self.delete_callback(g), expand=True)
                          )
                      ]
         dtrow = ft.DataRow(cells=cells)
@@ -176,11 +179,20 @@ class ContentPage(ft.View):
 
     # needs editing
     def delete_callback(self, g:int):
-        pass
+        def del_cll(e):
+            if len(self.dt.rows) != 0:
+                self.dt.rows.pop(g)
+                self.master.page.close(alrt)
+                self.master.page.update()
+
+        alrt = ft.AlertDialog(modal=True, title=ft.Text(self.l.sure), content=ft.Text(self.l.delete_sure), actions=[
+            ft.Button(self.l.ok, on_click=del_cll),
+            ft.Button(self.l.cancel, style=ft.ButtonStyle(color=ft.Colors.RED), on_click= lambda _: self.master.page.close(alrt))])
+        self.master.page.open(alrt)
+
 
     def show_callback(self, g:int):
-        i = g
-        row_group = getattr(self, f'row_group{i}')
+        row_group = getattr(self, f'row_group{g}')
 
         key_control = row_group.cells[1].content.controls[0]
         key_control.password = not key_control.password
