@@ -49,3 +49,8 @@ flet build
 ```
 flet run
 ```
+
+# Todo list
+> [ ] Fixing bugs in delete function <br>
+> [ ] Improving interface design, adding blurred background <br>
+> [ ] Undo, Redo functions <br>
