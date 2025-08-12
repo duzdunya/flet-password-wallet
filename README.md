@@ -12,7 +12,7 @@ This software writed in python using flet and has a beatufil user interface.
 ## Executable
 
 > [!IMPORTANT]
-> This project is under maintainance, i will add releases as soon as possible
+> This project is under BETA version and has bugs, i will add releases as soon as possible
 
 Go to releases section in right panel and simply install executable file and run it.
 
