@@ -22,10 +22,13 @@ class ContentPage(ft.View):
             ft.TextField(label=self.l.value),
             ft.TextButton(self.l.add,icon=ft.Icons.ADD, on_click=lambda _: self.add_callback())
             ]))
+        self.container = ft.Container(content=self.colon, expand=True, margin=ft.margin.symmetric(horizontal=40))
+        super().__init__(controls=[self.container], horizontal_alignment=CX_CENTER, vertical_alignment=CNTR, scroll=ft.ScrollMode.ALWAYS, appbar=self.appbar, bottom_appbar=self.bottom_appbar)
+        self.master.page.update()
 
         self.initialize_content()
-        self.container = ft.Container(content=self.colon, expand=True, margin=ft.margin.symmetric(horizontal=40))
-        super().__init__(controls=[self.container], horizontal_alignment=ft.CrossAxisAlignment.CENTER, vertical_alignment=ft.MainAxisAlignment.CENTER, scroll=ft.ScrollMode.ALWAYS, appbar=self.appbar, bottom_appbar=self.bottom_appbar)
+
+
 
     # mainly used in Appbar
     def __str__(self):

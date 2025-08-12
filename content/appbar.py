@@ -8,20 +8,21 @@ class LanguageAlert(ft.AlertDialog):
     def __init__(self, master, used_in):
         self.master = master
         self.l = master.l 
-        self.r_group = ft.RadioGroup(value=self.master.current_language, content=ft.Column([
+        self.r_group = ft.RadioGroup( value=self.master.current_language, content=ft.Column([
             ft.Radio(value="en", label="English"),
             ft.Radio(value="tr", label="Türkçe")
-            ]
-                                                       ))
-        self.actions = [ ft.Button("Select", on_click= lambda _: self.lang_callback()), 
-                        ft.TextButton("Cancel",style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE), on_click= lambda _: self.master.page.close(self))
+            ], height=100) )
 
+        self.actions = [ 
+                         ft.Button("Select", on_click= lambda _: self.lang_callback()),
+                        ft.TextButton("Cancel",style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE), on_click= lambda _: self.master.page.close(self))
                         ]
 
         super().__init__(
                 modal=True,
                 title="Language",
-                content=ft.Column([self.r_group]),
+                inset_padding=ft.padding.symmetric(vertical=40, horizontal=30), 
+                content=self.r_group,
                 actions=self.actions)
 
     def lang_callback(self):

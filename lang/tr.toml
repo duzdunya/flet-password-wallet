@@ -32,6 +32,7 @@ quit = "Çık"
 exit = "Terk et"
 exit_sure = "Uygulumayı terk ediyorsun, emin misin?"
 check_equal= "eşit mi?"
+alert = "Uyarı"
 
 # login and register page
 name = "İsim"

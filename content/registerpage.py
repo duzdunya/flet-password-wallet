@@ -49,6 +49,6 @@ class RegisterPage(ft.View):
             add_new_user(username=self.username_entry.value,name=self.name_entry.value, password_hashed=get_hashed_password(psswd), password_raw=psswd)
             self.master.reload_data()
             self.master.page.go("/login")
-            self.master.show_alert(self.l.registered)
+            self.master.show_snackbar(self.l.registered)
 
 

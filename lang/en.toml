@@ -29,6 +29,7 @@ quit = "Quit"
 exit = "Exit"
 exit_sure = "You are exiting the app, are you sure?"
 check_equal= "is equal?"
+alert = "Alert"
 
 # login and register page
 name = "Name"
