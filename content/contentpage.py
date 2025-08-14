@@ -6,6 +6,7 @@ from .abbr import *
 from sec.encryption import get_hashed_password, encrypt_the_content, decrypt_the_content
 from user.data import save_content
 from conf.settings import USER_DATA
+from data.ll import LinkedList
 
 
 class ContentPage(ft.View):
@@ -27,8 +28,6 @@ class ContentPage(ft.View):
         self.master.page.update()
 
         self.initialize_content()
-
-
 
     # mainly used in Appbar
     def __str__(self):
