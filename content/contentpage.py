@@ -13,7 +13,6 @@ class ContentPage(ft.View):
         self.master = master
         self.l = self.master.l
 
-        self.colon = ft.Column(scroll=ft.ScrollMode.ADAPTIVE, expand=True)
         self.appbar = CustomAppBar(title="Password Wallet | Data", master=self.master, used_in=self)
         self.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[
             ft.Text(self.l.new_entry),
@@ -22,13 +21,13 @@ class ContentPage(ft.View):
             ft.TextField(label=self.l.value),
             ft.TextButton(self.l.add,icon=ft.Icons.ADD, on_click=lambda _: self.add_callback())
             ]))
+
+        self.colon = ft.Column(scroll=ft.ScrollMode.ADAPTIVE, expand=True)
         self.container = ft.Container(content=self.colon, expand=True, margin=ft.margin.symmetric(horizontal=40))
-        super().__init__(controls=[self.container], horizontal_alignment=CX_CENTER, vertical_alignment=CNTR, scroll=ft.ScrollMode.ALWAYS, appbar=self.appbar, bottom_appbar=self.bottom_appbar)
+        super().__init__(controls=[self.container], appbar=self.appbar, bottom_appbar=self.bottom_appbar, horizontal_alignment=CX_CENTER, vertical_alignment=CNTR, scroll=ft.ScrollMode.ALWAYS)
         self.master.page.update()
 
         self.initialize_content()
-
-
 
     # mainly used in Appbar
     def __str__(self):
@@ -52,39 +51,41 @@ class ContentPage(ft.View):
             cells = [ 
                      ft.DataCell(
                          ft.Row([
-                             ft.TextField(value=f"{note}",  disabled=True, expand=True),
-                             ft.IconButton(icon=ft.Icons.EDIT,on_click=lambda _, g=i, n=0: self.edit_callback(g,n)),
+                             ft.TextField(value=f"{note}", border_color=ft.Colors.WHITE30, focused_border_color=ft.Colors.WHITE24, color=ft.Colors.WHITE,  disabled=True, expand=True),
+                             ft.IconButton(icon=ft.Icons.EDIT,on_click=lambda _, i=i, n=0: self.edit_callback(i,n)),
                              ])
                          ),
                      ft.DataCell(
                          ft.Row([
-                             ft.TextField(value=f'{dcryptd[note]["key"]}', disabled=True, password=True, expand=True),
-                             ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, g=i, n=1: self.edit_callback(g,n)),
+                             ft.TextField(value=f'{dcryptd[note]["key"]}', border_color=ft.Colors.WHITE30, focused_border_color=ft.Colors.WHITE24, color=ft.Colors.WHITE, disabled=True, password=True, expand=True),
+                             ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, i=i, n=1: self.edit_callback(i,n)),
                              ])
                          ),
                      ft.DataCell(
                          ft.Row([
-                             ft.TextField(value=f'{dcryptd[note]["value"]}', disabled=True, password=True, expand=True),
-                             ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, g=i, n=2: self.edit_callback(g,n)),
+                             ft.TextField(value=f'{dcryptd[note]["value"]}', border_color=ft.Colors.WHITE30, focused_border_color=ft.Colors.WHITE24, color=ft.Colors.WHITE, disabled=True, password=True, expand=True),
+                             ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, i=i, n=2: self.edit_callback(i,n)),
                              ])
                          ),
                      ft.DataCell(
-                         ft.IconButton(icon=ft.Icons.PREVIEW, on_click=lambda _, g=i: self.show_callback(g), expand=True)
+                         ft.IconButton(icon=ft.Icons.PREVIEW, on_click=lambda _, i=i: self.show_callback(i), expand=True)
                          ),
                      ft.DataCell(
-                         ft.IconButton(icon=ft.Icons.DELETE, icon_color=ft.Colors.WHITE, bgcolor=ft.Colors.RED, on_click=lambda _, g=i: self.delete_callback(g), expand=True)
+                         ft.IconButton(icon=ft.Icons.DELETE, icon_color=ft.Colors.WHITE, bgcolor=ft.Colors.RED, on_click=lambda _, i=i: self.delete_callback(i), expand=True)
                          )
                      ]
             dtrow = ft.DataRow(cells=cells)
-            rows.append(dtrow)
 
             setattr(self, f'row_group{i}', dtrow)
-            print("setted ", f"row_group{i}")
             setattr(self, f'cell_{i}0_editing', False)
             setattr(self, f'cell_{i}1_editing', False)
             setattr(self, f'cell_{i}2_editing', False)
+            
+            rows.append(dtrow)
 
-        self.dt = ft.DataTable(columns=cols, rows=rows, expand=True, border=ft.border.all(0))
+
+        self.dt = ft.DataTable(show_checkbox_column=True,columns=cols, rows=rows, expand=True, border=ft.border.all(0))
+#        self.colon.controls.append(self.dt)
         self.colon.controls.append(ft.Row([self.dt], alignment=ft.MainAxisAlignment.CENTER))
         self.master.page.update()
 
@@ -118,13 +119,13 @@ class ContentPage(ft.View):
         value_val = controls[3].value
 
         if len(note_val) == 0:
-            self.master.show_snackbar("Please add something to Note Area")
+            self.master.show_snackbar(self.l.add_note)
             return
         elif len(key_val) == 0:
-            self.master.show_snackbar("Please add something to Key Area")
+            self.master.show_snackbar(self.l.add_key)
             return
         elif len(value_val) == 0:
-            self.master.show_snackbar("Please add something to Value Area")
+            self.master.show_snackbar(self.l.add_value)
             return
         else:
             try:
@@ -132,7 +133,7 @@ class ContentPage(ft.View):
             except:
                 pass
             else:
-                self.master.show_snackbar("Note Area must be unique")
+                self.master.show_snackbar(self.l.note_must_unique)
                 return
 
         i = len(self.dt.rows)
@@ -140,26 +141,26 @@ class ContentPage(ft.View):
                      ft.DataCell(
                          ft.Row([
                              ft.TextField(value=f"{note_val}",  disabled=True, expand=True),
-                             ft.IconButton(icon=ft.Icons.EDIT,on_click=lambda _, g=i, n=0: self.edit_callback(g,n)),
+                             ft.IconButton(icon=ft.Icons.EDIT,on_click=lambda _, i=i, n=0: self.edit_callback(i,n)),
                              ])
                          ),
                      ft.DataCell(
                          ft.Row([
                              ft.TextField(value=f'{key_val}', disabled=True, password=True, expand=True),
-                             ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, g=i, n=1: self.edit_callback(g,n)),
+                             ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, i=i, n=1: self.edit_callback(i,n)),
                              ])
                          ),
                      ft.DataCell(
                          ft.Row([
                              ft.TextField(value=f'{value_val}', disabled=True, password=True, expand=True),
-                             ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, g=i, n=2: self.edit_callback(g,n)),
+                             ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, i=i, n=2: self.edit_callback(i,n)),
                              ])
                          ),
                      ft.DataCell(
-                         ft.IconButton(icon=ft.Icons.PREVIEW, on_click=lambda _, g=i: self.show_callback(g), expand=True)
+                         ft.IconButton(icon=ft.Icons.PREVIEW, on_click=lambda _, i=i: self.show_callback(i), expand=True)
                          ),
                      ft.DataCell(
-                         ft.IconButton(icon=ft.Icons.DELETE, icon_color=ft.Colors.WHITE, bgcolor=ft.Colors.RED, on_click=lambda _, g=i: self.delete_callback(g), expand=True)
+                         ft.IconButton(icon=ft.Icons.DELETE, icon_color=ft.Colors.WHITE, bgcolor=ft.Colors.RED, on_click=lambda _, i=i: self.delete_callback(i), expand=True)
                          )
                      ]
         dtrow = ft.DataRow(cells=cells)
@@ -178,21 +179,23 @@ class ContentPage(ft.View):
         self.master.page.update()
 
     # needs editing
-    def delete_callback(self, g:int):
+    def delete_callback(self, i:int):
         def del_cll(e):
             if len(self.dt.rows) != 0:
-                self.dt.rows.pop(g)
+#                self.dt.rows.pop(i)
+                getattr(self, f"row_group{i}").visible = False
                 self.master.page.close(alrt)
                 self.master.page.update()
 
         alrt = ft.AlertDialog(modal=True, title=ft.Text(self.l.sure), content=ft.Text(self.l.delete_sure), actions=[
             ft.Button(self.l.ok, on_click=del_cll),
-            ft.Button(self.l.cancel, style=ft.ButtonStyle(color=ft.Colors.RED), on_click= lambda _: self.master.page.close(alrt))])
+            ft.Button(self.l.cancel, style=ft.ButtonStyle(color=ft.Colors.RED), on_click= lambda _: self.master.page.close(alrt))]
+                              )
         self.master.page.open(alrt)
 
 
-    def show_callback(self, g:int):
-        row_group = getattr(self, f'row_group{g}')
+    def show_callback(self, i:int):
+        row_group = getattr(self, f'row_group{i}')
 
         key_control = row_group.cells[1].content.controls[0]
         key_control.password = not key_control.password
@@ -203,8 +206,7 @@ class ContentPage(ft.View):
         self.master.page.update()
     
     # done
-    def edit_callback(self, g:int, n:int):
-        i = g
+    def edit_callback(self, i:int, n:int):
         row_group = getattr(self, f'row_group{i}')
         row_cells = row_group.cells
         is_editing = getattr(self, f'cell_{i}{n}_editing')
@@ -233,11 +235,12 @@ class ContentPage(ft.View):
     def get_serialized_content(self) -> dict:
         serialized = {}
         for datarow in self.dt.rows:
-            # note, key and value cells
-            note_value = datarow.cells[0].content.controls[0].value 
-            key_value = datarow.cells[1].content.controls[0].value 
-            value_value = datarow.cells[2].content.controls[0].value
-            serialized[note_value]= {"key":key_value, "value":value_value}
+            if datarow.visible:
+                # note, key and value cells
+                note_value = datarow.cells[0].content.controls[0].value 
+                key_value = datarow.cells[1].content.controls[0].value 
+                value_value = datarow.cells[2].content.controls[0].value
+                serialized[note_value]= {"key":key_value, "value":value_value}
 
         return serialized
 
