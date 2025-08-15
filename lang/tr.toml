@@ -1,5 +1,9 @@
 language = "tr"
 
+pw_login = "Password Wallet | Giriş"
+pw_register = "Password Wallet | Kayıt"
+pw = "Password Wallet"
+
 welcome = "Hoşgeldin!"
 welcome_content = """
 # Merhaba!,
@@ -36,6 +40,9 @@ alert = "Uyarı"
 sure = "Emin misin?"
 yes = "Evet"
 no = "Hayır"
+exiting = "Çıkılıyor"
+exiting_sure = "Gerçekten çıkmak istiyor musun?"
+save_before_exit = "Kaydedilmemiş değişiklikler var, kaydet ya da kaydetmeden çık."
 
 # login and register page
 name = "İsim"

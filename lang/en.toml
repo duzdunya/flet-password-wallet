@@ -1,5 +1,9 @@
 language = "en"
 
+pw_login = "Password Wallet | Login"
+pw_register = "Password Wallet | Register"
+pw = "Password Wallet"
+
 welcome = "Welcome!"
 welcome_content = """
 # Hello!,
@@ -33,6 +37,9 @@ alert = "Alert"
 sure = "Are you sure?"
 yes = "Yes"
 no = "No"
+exiting = "Exiting"
+exiting_sure = "Do you want to exit?"
+save_before_exit = "You have unsaved changes, save or exit without save."
 
 # login and register page
 name = "Name"
