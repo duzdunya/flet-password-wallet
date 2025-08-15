@@ -13,13 +13,13 @@ class ContentPage(ft.View):
         self.master = master
         self.l = self.master.l
 
-        self.appbar = CustomAppBar(title="Password Wallet | Data", master=self.master, used_in=self)
+        self.appbar = CustomAppBar(title=self.l.pw, master=self.master, used_in=self)
         self.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[
             ft.Text(self.l.new_entry),
-            ft.TextField(label=self.l.note),
-            ft.TextField(label=self.l.key),
-            ft.TextField(label=self.l.value),
-            ft.TextButton(self.l.add,icon=ft.Icons.ADD, on_click=lambda _: self.add_callback())
+            ft.TextField(label=self.l.note, border_color=ft.Colors.WHITE24),
+            ft.TextField(label=self.l.key, border_color=ft.Colors.WHITE24),
+            ft.TextField(label=self.l.value, border_color=ft.Colors.WHITE24),
+            ft.TextButton(self.l.add,style=ft.ButtonStyle(color=ft.Colors.WHITE70), icon_color=ft.Colors.WHITE70,icon=ft.Icons.ADD, on_click=lambda _: self.add_callback())
             ]))
 
         self.colon = ft.Column(scroll=ft.ScrollMode.ADAPTIVE, expand=True)
