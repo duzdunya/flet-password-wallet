@@ -1,6 +1,6 @@
 language = "tr"
 
-welcome = "Hoşgedin!"
+welcome = "Hoşgeldin!"
 welcome_content = """
 # Merhaba!,
 ## Uygulama hoşgeldin.
