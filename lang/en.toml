@@ -80,5 +80,8 @@ unsaved = "Unsaved Changes"
 unsaved_content = "You have unsaved changes!\nYou can save or exit without saving."
 no_changes  = "You dont have any changes"
 exit_without_save = "Exit without saving"
-
+add_note = "Please add something to Note Area."
+add_key = "Please add something to Key Area"
+add_value = "Please add something to Value Area"
+note_must_unique = "Note Area must be unique!"
 
