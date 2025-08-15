@@ -99,5 +99,8 @@ unsaved = "Kaydedilmemiş Değişiklikler"
 unsaved_content = "Kaydedilmemiş değişiklikler var!\nKaydet ya da kaydetmeden terk et."
 no_changes  = "Herhangi bir değişiklik yok"
 exit_without_save = "Kaydetmeden terk et."
-
+add_note = "Lütfen Not alanına bir şey girin."
+add_key = "Lütfen Anahtar alanına bir şey girin."
+add_value = "Lütfen Değer alanına bir şey girin."
+note_must_unique = "Not alanı benzersiz olmalı!"
 
