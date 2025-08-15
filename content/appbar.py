@@ -14,7 +14,7 @@ class LanguageAlert(ft.AlertDialog):
             ], height=100) )
 
         self.actions = [ 
-                         ft.Button("Select", on_click= lambda _: self.lang_callback()),
+                         ft.Button("Select", color=ft.Colors.WHITE70, on_click= lambda _: self.lang_callback()),
                         ft.TextButton("Cancel",style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE), on_click= lambda _: self.master.page.close(self))
                         ]
 
@@ -47,11 +47,11 @@ class CustomAppBar(ft.AppBar):
 
         actions = []
         if str(self.used_in) == "login":
-            actions.append(ft.TextButton(text=l.info, icon=ft.Icons.INFO, on_click=lambda _: self.master.page.open(dlg), style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0)), expand=True))
+            actions.append(ft.TextButton(text=l.info,color=ft.Colors.WHITE70, icon=ft.Icons.INFO, on_click=lambda _: self.master.page.open(dlg), style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0)), expand=True))
 
         elif str(self.used_in) == "data":
-            actions.append(ft.TextButton(text=self.l.save, icon=ft.Icons.SAVE_SHARP, on_click=lambda _: self.used_in.save_callback()))
-            actions.append(ft.TextButton(text=self.l.reload, icon=ft.Icons.CACHED, on_click=lambda _: self.used_in.reload_callback()))
+            actions.append(ft.TextButton(text=self.l.save,style=ft.ButtonStyle(color=ft.Colors.WHITE70), icon=ft.Icons.SAVE_SHARP, on_click=lambda _: self.used_in.save_callback()))
+            actions.append(ft.TextButton(text=self.l.reload,style=ft.ButtonStyle(color=ft.Colors.WHITE70), icon=ft.Icons.CACHED, on_click=lambda _: self.used_in.reload_callback()))
 
         actions.append(
                 ft.PopupMenuButton(items=[
