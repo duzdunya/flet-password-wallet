@@ -35,6 +35,9 @@ class MainWindow:
         self.page.title = "Password Wallet"
         self.page.vertical_alignment = cntr 
         self.page.on_route_change = self.route_change
+        self.page.fonts = {"noto sans":"fonts/NotoSans-Bold.ttf"}
+        self.page.window.prevent_close = True
+        self.page.window.on_event = self.event_cllbck
 
         #multilanguage
         self.current_language = configjson["language"]
@@ -44,6 +47,7 @@ class MainWindow:
         self.welcomepage:ft.View = WelcomePage(self)
         self.loginpage:ft.View = LoginPage(self)
         self.registerpage:ft.View = RegisterPage(self)
+        self.contentpage = None
 
         self.custom_views = [self.welcomepage, self.loginpage, self.registerpage]
 
@@ -52,6 +56,40 @@ class MainWindow:
 
     def __str__(self):
         return "mainwindow"
+
+    def event_cllbck(self, e):
+        if e.data == "close":
+            if self.contentpage is not None:
+                if self.contentpage.is_there_change():
+                    alert = ft.AlertDialog(title=self.l.unsaved,
+                                           modal=True,
+                                           content=ft.Text(self.l.unsaved_content),
+                                           actions_padding=30,
+                                           actions=[
+                                               ft.TextButton(self.l.save, icon=ft.Icons.SAVE_SHARP, on_click= lambda _: self.contentpage.exit_save_callback(alert)),
+                                               ft.TextButton(self.l.exit_without_save, icon=ft.Icons.SENSOR_DOOR_OUTLINED, on_click= lambda _: self.page.window.destroy()),
+                                               ft.TextButton(self.l.cancel,style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE), on_click= lambda _: self.page.close(alert))
+                                               ])
+                    self.page.open(alert)
+                else:
+                    alert = ft.AlertDialog(modal=True,
+                                           title=self.l.exit,
+                                           content=ft.Text(self.l.exit_sure,size=20),
+                                           actions=[
+                                               ft.TextButton(self.l.ok, on_click= lambda _: self.master.page.window.destroy()),
+                                               ft.TextButton(self.l.cancel, style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE), on_click= lambda _: self.page.close(alert))
+                                               ])
+                    self.page.open(alert)
+
+            else:
+                alert = ft.AlertDialog(modal=True,
+                                       title=self.l.exit,
+                                       content=ft.Text(self.l.exit_sure,size=20),
+                                       actions=[
+                                           ft.TextButton(self.l.ok, on_click= lambda _: self.page.window.destroy()),
+                                           ft.TextButton(self.l.cancel, style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE), on_click= lambda _: self.page.close(alert))
+                                           ])
+                self.page.open(alert)
 
     def change_language(self, language:str, init:bool=False):
         langpath = f"lang/{language}.toml"
@@ -91,8 +129,8 @@ class MainWindow:
         elif self.page.route == '/register':
             self.page.views.append(self.custom_views[2])
         elif self.page.route == '/':
-            contentpage:ft.View = ContentPage(self)
-            self.page.views.append(contentpage)
+            self.contentpage:ft.View = ContentPage(self)
+            self.page.views.append(self.contentpage)
 
         self.page.update()
     
