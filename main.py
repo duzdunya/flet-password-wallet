@@ -9,6 +9,20 @@ from content.pages import WelcomePage, LoginPage, RegisterPage, ContentPage, War
 from sec.encryption import decrypt_the_content
 from lang.header import Local
 
+import sys, os
+
+def resource_path(relative_path: str) -> str:
+    """Get absolute path to resource (works for dev and PyInstaller .exe)."""
+    if hasattr(sys, "_MEIPASS"):
+        # Running from the bundle -> use the temporary _MEIPASS folder
+        return os.path.join(sys._MEIPASS, relative_path)
+    # Running normally -> use relative path
+    return os.path.join(os.path.abspath("."), relative_path)
+
+# Example usage:
+
+
+
 
 # Load the json file
 # There is only 2 config files: config.json and data.json.
@@ -96,7 +110,7 @@ class MainWindow:
                 self.page.open(alert)
 
     def change_language(self, language:str, init:bool=False):
-        langpath = f"lang/{language}.toml"
+        langpath = resource_path(f"lang/{language}.toml")
         if language == self.current_language and not init:
             return
         elif os.path.exists(langpath):
