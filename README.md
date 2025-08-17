@@ -49,6 +49,23 @@ flet build
 ```
 flet run
 ```
+# Uninstall
+Unistall is really easy in two steps.
+
+Firstly,
+if you cloned git repo, remove git repo, or if you downloaded executable, remove it.
+
+Secondly,
+remove these directories specific to your platform:
+
+On Linux:<br>
+```~/.config/password_wallet```
+
+On macOS:<br>
+```/Users/<username>/Library/Application Support/password_wallet```
+
+On Windows:<br>
+```C:\\Users\\<username>\\AppData\\Local\\duzdunya\\password_wallet```
 
 # Todo list
 > [x] Fixing bugs in delete function <br>
