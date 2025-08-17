@@ -16,15 +16,15 @@ class ContentPage(ft.View):
         self.appbar = CustomAppBar(title=self.l.pw, master=self.master, used_in=self)
         self.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[
             ft.Text(self.l.new_entry),
-            ft.TextField(label=self.l.note, border_color=ft.Colors.WHITE24),
-            ft.TextField(label=self.l.key, border_color=ft.Colors.WHITE24),
-            ft.TextField(label=self.l.value, border_color=ft.Colors.WHITE24),
+            ft.TextField(label=self.l.note, width=150, max_length=25, border_color=ft.Colors.WHITE24),
+            ft.TextField(label=self.l.key, width=150, max_length=25, border_color=ft.Colors.WHITE24),
+            ft.TextField(label=self.l.value, width=150, max_length=25, border_color=ft.Colors.WHITE24),
             ft.TextButton(self.l.add,style=ft.ButtonStyle(color=ft.Colors.WHITE70), icon_color=ft.Colors.WHITE70,icon=ft.Icons.ADD, on_click=lambda _: self.add_callback())
-            ]))
+            ], scroll=ft.ScrollMode.ADAPTIVE))
 
         self.colon = ft.Column(scroll=ft.ScrollMode.ADAPTIVE, expand=True)
         self.container = ft.Container(content=self.colon, expand=True, margin=ft.margin.symmetric(horizontal=40))
-        super().__init__(controls=[self.container], appbar=self.appbar, bottom_appbar=self.bottom_appbar, horizontal_alignment=CX_CENTER, vertical_alignment=CNTR, scroll=ft.ScrollMode.ALWAYS)
+        super().__init__(controls=[self.colon], appbar=self.appbar, bottom_appbar=self.bottom_appbar, horizontal_alignment=CX_CENTER, vertical_alignment=CNTR, scroll=ft.ScrollMode.ALWAYS)
         self.master.page.update()
 
         self.initialize_content()
@@ -38,9 +38,9 @@ class ContentPage(ft.View):
         self.colon.controls = []
 
         cols = [
-                ft.DataColumn(ft.Text(self.l.note, expand=True)),
-                ft.DataColumn(ft.Text(self.l.key, expand=True)),
-                ft.DataColumn(ft.Text(self.l.value, expand=True)),
+                ft.DataColumn(ft.Text(self.l.note, width=200, expand=True)),
+                ft.DataColumn(ft.Text(self.l.key, width=200, expand=True)),
+                ft.DataColumn(ft.Text(self.l.value, width=200, expand=True)),
                 ft.DataColumn(ft.Text(self.l.show, expand=True)),
                 ft.DataColumn(ft.Text(self.l.delete, expand=True))
                 ]
@@ -50,20 +50,20 @@ class ContentPage(ft.View):
         for i, note in enumerate(dcryptd):
             cells = [ 
                      ft.DataCell(
-                         ft.Row([
-                             ft.TextField(value=f"{note}", border_color=ft.Colors.WHITE30, focused_border_color=ft.Colors.WHITE24, color=ft.Colors.WHITE,  disabled=True, expand=True),
+                         ft.Row(controls=[
+                             ft.TextField(value=f"{note}", width=150, max_length=25, border_color=ft.Colors.WHITE30, focused_border_color=ft.Colors.WHITE24, color=ft.Colors.WHITE, read_only=True, expand=True),
                              ft.IconButton(icon=ft.Icons.EDIT,on_click=lambda _, i=i, n=0: self.edit_callback(i,n)),
                              ])
                          ),
                      ft.DataCell(
                          ft.Row([
-                             ft.TextField(value=f'{dcryptd[note]["key"]}', border_color=ft.Colors.WHITE30, focused_border_color=ft.Colors.WHITE24, color=ft.Colors.WHITE, disabled=True, password=True, expand=True),
+                             ft.TextField(value=f'{dcryptd[note]["key"]}', width=150, max_length=25, border_color=ft.Colors.WHITE30, focused_border_color=ft.Colors.WHITE24, color=ft.Colors.WHITE, read_only=True, password=True, expand=True),
                              ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, i=i, n=1: self.edit_callback(i,n)),
                              ])
                          ),
                      ft.DataCell(
                          ft.Row([
-                             ft.TextField(value=f'{dcryptd[note]["value"]}', border_color=ft.Colors.WHITE30, focused_border_color=ft.Colors.WHITE24, color=ft.Colors.WHITE, disabled=True, password=True, expand=True),
+                             ft.TextField(value=f'{dcryptd[note]["value"]}', width=150, max_length=25, border_color=ft.Colors.WHITE30, focused_border_color=ft.Colors.WHITE24, color=ft.Colors.WHITE, read_only=True, password=True, expand=True),
                              ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, i=i, n=2: self.edit_callback(i,n)),
                              ])
                          ),
@@ -84,9 +84,9 @@ class ContentPage(ft.View):
             rows.append(dtrow)
 
 
-        self.dt = ft.DataTable(show_checkbox_column=True,columns=cols, rows=rows, expand=True, border=ft.border.all(0))
+        self.dt = ft.DataTable(columns=cols, rows=rows, expand=True, border=ft.border.all(0))
 #        self.colon.controls.append(self.dt)
-        self.colon.controls.append(ft.Row([self.dt], alignment=ft.MainAxisAlignment.CENTER))
+        self.colon.controls.append(ft.Row(controls=[self.dt], alignment=ft.MainAxisAlignment.CENTER, scroll=ft.ScrollMode.ADAPTIVE))
         self.master.page.update()
 
     def save_callback(self):
@@ -140,19 +140,19 @@ class ContentPage(ft.View):
         cells = [ 
                      ft.DataCell(
                          ft.Row([
-                             ft.TextField(value=f"{note_val}",  disabled=True, expand=True),
+                             ft.TextField(value=f"{note_val}", width=150, max_length=25, read_only=True, expand=True, border_color=ft.Colors.WHITE30, focused_border_color=ft.Colors.WHITE24, color=ft.Colors.WHITE),
                              ft.IconButton(icon=ft.Icons.EDIT,on_click=lambda _, i=i, n=0: self.edit_callback(i,n)),
                              ])
                          ),
                      ft.DataCell(
                          ft.Row([
-                             ft.TextField(value=f'{key_val}', disabled=True, password=True, expand=True),
+                             ft.TextField(value=f'{key_val}', width=150, max_length=25, read_only=True, password=True, expand=True, border_color=ft.Colors.WHITE30, focused_border_color=ft.Colors.WHITE24, color=ft.Colors.WHITE),
                              ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, i=i, n=1: self.edit_callback(i,n)),
                              ])
                          ),
                      ft.DataCell(
                          ft.Row([
-                             ft.TextField(value=f'{value_val}', disabled=True, password=True, expand=True),
+                             ft.TextField(value=f'{value_val}', width=150, max_length=25, read_only=True, password=True, expand=True, border_color=ft.Colors.WHITE30, focused_border_color=ft.Colors.WHITE24, color=ft.Colors.WHITE),
                              ft.IconButton(icon=ft.Icons.EDIT, on_click=lambda _, i=i, n=2: self.edit_callback(i,n)),
                              ])
                          ),
@@ -213,14 +213,14 @@ class ContentPage(ft.View):
 
         new_row_control = row_cells[n].content.controls[0]
         if is_editing:
-            new_row_control.disabled = True
+            new_row_control.read_only = True
             row_cells[n].content.controls[0] = new_row_control
 
             row_edit_control = row_cells[n].content.controls[1]
             row_edit_control.icon = ft.Icons.EDIT
             row_cells[n].content.controls[1] = row_edit_control
         else:
-            new_row_control.disabled = False
+            new_row_control.read_only= False
             row_cells[n].content.controls[0] = new_row_control
 
             row_edit_control = row_cells[n].content.controls[1] 
