@@ -57,6 +57,10 @@ class MainWindow:
     def __str__(self):
         return "mainwindow"
 
+    def exit_save_callback(self, alert):
+        self.page.close(alert)
+        self.contentpage.save_callback()
+
     def event_cllbck(self, e):
         if e.data == "close":
             if self.contentpage is not None:
@@ -66,7 +70,7 @@ class MainWindow:
                                            content=ft.Text(self.l.unsaved_content),
                                            actions_padding=30,
                                            actions=[
-                                               ft.TextButton(self.l.save, icon=ft.Icons.SAVE_SHARP, on_click= lambda _: self.contentpage.exit_save_callback(alert)),
+                                               ft.TextButton(self.l.save, icon=ft.Icons.SAVE_SHARP, on_click= lambda _: self.exit_save_callback(alert)),
                                                ft.TextButton(self.l.exit_without_save, icon=ft.Icons.SENSOR_DOOR_OUTLINED, on_click= lambda _: self.page.window.destroy()),
                                                ft.TextButton(self.l.cancel,style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE), on_click= lambda _: self.page.close(alert))
                                                ])
@@ -76,7 +80,7 @@ class MainWindow:
                                            title=self.l.exit,
                                            content=ft.Text(self.l.exit_sure,size=20),
                                            actions=[
-                                               ft.TextButton(self.l.ok, on_click= lambda _: self.master.page.window.destroy()),
+                                               ft.TextButton(self.l.ok, on_click= lambda _: self.page.window.destroy()),
                                                ft.TextButton(self.l.cancel, style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE), on_click= lambda _: self.page.close(alert))
                                                ])
                     self.page.open(alert)
