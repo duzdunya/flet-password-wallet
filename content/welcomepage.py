@@ -8,7 +8,7 @@ class WelcomePage(ft.View):
 
         column = ft.Column([
             ft.Markdown(
-                        self.l.welcome,
+                        self.l.welcome_content,
                         selectable=True,
                         ),
             ft.ElevatedButton(text=self.l.ok, on_click=lambda _: self.okay_callback())

@@ -53,6 +53,8 @@ class CustomAppBar(ft.AppBar):
             actions.append(ft.TextButton(text=self.l.save,style=ft.ButtonStyle(color=ft.Colors.WHITE70), icon=ft.Icons.SAVE_SHARP, on_click=lambda _: self.used_in.save_callback()))
             actions.append(ft.TextButton(text=self.l.reload,style=ft.ButtonStyle(color=ft.Colors.WHITE70), icon=ft.Icons.CACHED, on_click=lambda _: self.used_in.reload_callback()))
 
+        actions.append(ft.TextButton(text=self.l.info, style=ft.ButtonStyle(color=ft.Colors.WHITE70), icon=ft.Icons.INFO, on_click=lambda _: self.master.show_alert(self.l.info_content),))
+
         actions.append(
                 ft.PopupMenuButton(items=[
                     ft.PopupMenuItem(text="Language", icon=ft.Icons.LANGUAGE, on_click=lambda _: self.lang_callback()),

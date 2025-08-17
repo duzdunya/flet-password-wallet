@@ -9,7 +9,7 @@ class WarningAlert(ft.AlertDialog):
             title = self.l.alert
 
         super().__init__(modal=True,
-                         content=ft.Text(text, size=20),
+                         content=ft.Text(text, size=15),
                          actions=[ft.TextButton(self.l.ok, on_click= lambda _: self.master.page.close(self))]
                          )
 
