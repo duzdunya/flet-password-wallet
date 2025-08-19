@@ -40,10 +40,16 @@ source venv/bin/activate
 ```
 pip install -r requirements.txt
 ```
+
 **5 - Build the app**
-```
-flet build
-```
+
+Linux:
+Check the instructions for Linux
+[for Linux](https://flet.dev/docs/publish/linux)
+
+Windows:
+Check the instructions for Windows
+[for Windows](https://flet.dev/docs/publish/windows)
 
 **6 Run it**
 ```
