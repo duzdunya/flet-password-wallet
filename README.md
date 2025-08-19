@@ -7,6 +7,9 @@ This application serves to store your passwords, in a secure, simple way, the da
 
 This software writed in python using flet and has a beatufil user interface.
 
+Video Presentation (Turkish):
+[youtube](https://www.youtube.com/watch?v=0g_oMW8kKD8&feature=youtu.be)
+
 # Installation
 
 ## Executable
