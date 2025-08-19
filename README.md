@@ -5,7 +5,7 @@ This application serves to store your passwords, in a secure, simple way, the da
 
 **Store your passwords, locally, secure, in a simple way. Remember once, the master password.**
 
-This software writed in python using flet and has a beatufil user interface.
+This software writed in python using flet and has a beautiful user interface.
 
 Video Presentation (Turkish):
 [youtube](https://www.youtube.com/watch?v=0g_oMW8kKD8&feature=youtu.be)
